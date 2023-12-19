@@ -65,7 +65,7 @@ get_repo_info() {
     # Remove '.git' from the end of the URL
     repo_url="${repo_url%.git}"
     # Split the URL by "/"
-    IFS="/" read -ra url_parts <<< "$repo_url"
+     IFS="/" read -ra url_parts <<< "$repo_url"
     # Get the length of the array
     length=${#url_parts[@]}
     # Extract repository name and owner
@@ -76,13 +76,14 @@ get_repo_info() {
     echo "Repository Owner: $repo_owner"
 }
 
-repositories=(<+pipeline.variables.repoUrl>)
-    latest_version=$(get_latest_go_version)
-    echo "Latest version value in checkfornew verson:$latest_version"
-     new_go_version=$(extract_version "$latest_version")
-     echo 'Latest new_go_version:'$new_go_version
-     new_go_version='1.20'
-     echo 'Latest new_go_version:'$new_go_version
+#repositories=(<+pipeline.variables.repoUrl>)
+repositories=("https://github.com/drone-plugins/drone-gcs.git")
+latest_version=$(get_latest_go_version)
+echo "Latest version value in checkfornew verson:$latest_version"
+new_go_version=$(extract_version "$latest_version")
+echo 'Latest new_go_version:'$new_go_version
+new_go_version='1.20'
+echo 'Latest new_go_version:'$new_go_version
 
 
 # Ensure that git and hub are installed
