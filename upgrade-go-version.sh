@@ -64,8 +64,9 @@ get_repo_info() {
     local repo_url="$1"
     # Remove '.git' from the end of the URL
     repo_url="${repo_url%.git}"
+    echo 'repo_url : $repo_url'
     # Split the URL by "/"
-     IFS="/" read -ra url_parts <<< "$repo_url"
+      IFS="/" read -ra url_parts <<< "$repo_url"
     # Get the length of the array
     length=${#url_parts[@]}
     # Extract repository name and owner
