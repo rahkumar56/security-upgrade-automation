@@ -100,43 +100,43 @@ for repo in "${repositories[@]}"; do
     pwd
     ls -la
     base_ranch=$(git rev-parse --abbrev-ref HEAD)
-# Print the branch name
+    # Print the branch name
     echo "Current Git branch: $base_ranch"
     git checkout -b <+pipeline.variables.FeatureBranch>
     git fetch origin
     git pull origin
-   
-#Update go version in files
-update_version ".drone.yml"
-update_version "go.mod"
-#Get Repo info
+    #Update go version in files
+    update_version ".drone.yml"
+    update_version "go.mod"
+
+    #Get Repo info
     get_repo_info "https://github.com/drone-plugins/drone-gcs.git"
     echo "***************in call Repository Name: $repo_name"
     echo "**************in call Repository Owner: $repo_owner"
     
-git config --global user.email "rahul.kumar@harness.io"
-git config --global user.name "rahkumar56"
-git remote set-url origin https://rahkumar56:<+pipeline.variables.PAT_Token>@github.com/drone-plugins/drone-gcs.git
-# Push the changes to a new branch   
-git add .
-git commit -m "Update Go version to $new_go_version"
-git push origin <+pipeline.variables.FeatureBranch>
+    git config --global user.email "rahul.kumar@harness.io"
+    git config --global user.name "rahkumar56"
+    git remote set-url origin https://rahkumar56:<+pipeline.variables.PAT_Token>@github.com/drone-plugins/drone-gcs.git
+    # Push the changes to a new branch   
+    git add .
+    git commit -m "Update Go version to $new_go_version"
+    git push origin <+pipeline.variables.FeatureBranch>
 
     # Create a pull request
     # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
     # Example for GitHub using Hub:
     #hub pull-request -m "Update Go version to $new_go_version"
-echo 'commit and push is success'
-curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
---header 'Accept: application/vnd.github+json' \
---header 'Authorization: Bearer <+pipeline.variables.PAT_Token>' \
---header 'Content-Type: application/json' \
---data '{
-    "title": "Updated go version",
-    "body": "Please pull these awesome changes in!",
-    "head": "$repo_owner:<+pipeline.variables.FeatureBranch>",
-    "base": "$base_ranch"
-}'
+    echo 'commit and push is success'
+    curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
+    --header 'Accept: application/vnd.github+json' \
+    --header 'Authorization: Bearer <+pipeline.variables.PAT_Token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "title": "Updated go version",
+        "body": "Please pull these awesome changes in!",
+        "head": "$repo_owner:<+pipeline.variables.FeatureBranch>",
+        "base": "$base_ranch"
+    }'
 
-    cd ..
-done
+        cd ..
+    done
