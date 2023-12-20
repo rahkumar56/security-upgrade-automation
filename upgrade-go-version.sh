@@ -107,7 +107,7 @@ for repo in "${repositories[@]}"; do
     base_ranch=$(git rev-parse --abbrev-ref HEAD)
     # Print the branch name
     echo "Current Git branch: $base_ranch"
-    git checkout -b <+pipeline.variables.FeatureBranch>
+    git checkout -b $feature_branch
     git fetch origin
     git pull origin
     #Update go version in files
@@ -121,11 +121,11 @@ for repo in "${repositories[@]}"; do
     
     git config --global user.email "rahul.kumar@harness.io"
     git config --global user.name "rahkumar56"
-    git remote set-url origin https://rahkumar56:<+pipeline.variables.PAT_Token>@github.com/drone-plugins/drone-gcs.git
+    git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     # Push the changes to a new branch   
     git add .
     git commit -m "Update Go version to $new_go_version"
-    git push origin <+pipeline.variables.FeatureBranch>
+    git push origin $feature_branch
 
     # Create a pull request
     # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
@@ -134,12 +134,12 @@ for repo in "${repositories[@]}"; do
     echo 'commit and push is success'
     curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
     --header 'Accept: application/vnd.github+json' \
-    --header 'Authorization: Bearer <+pipeline.variables.PAT_Token>' \
+    --header 'Authorization: Bearer $pat_token' \
     --header 'Content-Type: application/json' \
     --data '{
         "title": "Updated go version",
         "body": "Please pull these awesome changes in!",
-        "head": "$repo_owner:<+pipeline.variables.FeatureBranch>",
+        "head": "$repo_owner:$feature_branch",
         "base": "$base_ranch"
     }'
 
