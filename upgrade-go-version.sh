@@ -141,12 +141,12 @@ for repo in "${repositories[@]}"; do
     echo 'commit and push is success'
     curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
     --header 'Accept: application/vnd.github+json' \
-    --header 'Authorization: Bearer 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' \
+    --header 'Authorization: Bearer $pat_token' \
     --header 'Content-Type: application/json' \
     --data '{
         "title": "Updated go version",
         "body": "Please pull these awesome changes in!",
-        "head": "$repo_owner:$feature_branch",
+        "head": "$repo_owner:updategorahul",
         "base": "$base_ranch"
     }'
 
