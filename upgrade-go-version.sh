@@ -82,8 +82,9 @@ get_repo_info() {
 
 #repositories=(<+pipeline.variables.repoUrl>)
 echo 'Inside pipeline file'
-echo $feature_branch
+echo 'feature_branch: ' $feature_branch
 echo 'repositories :' $repositories
+echo 'pat_token: ' $pat_token
 repositories=("https://github.com/drone-plugins/drone-gcs.git")
 latest_version=$(get_latest_go_version)
 echo "Latest version value in checkfornew verson:$latest_version"
