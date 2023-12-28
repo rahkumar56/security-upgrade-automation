@@ -118,6 +118,9 @@ for repo in "${repositories[@]}"; do
     get_repo_info "https://github.com/drone-plugins/drone-gcs.git"
     echo "***************in call Repository Name: $repo_name"
     echo "**************in call Repository Owner: $repo_owner"
+
+    echo $pat_token
+    echo $pat_token |base64
     
     git config --global user.email "rahul.kumar@harness.io"
     git config --global user.name "rahkumar56"
