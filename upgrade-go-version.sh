@@ -102,12 +102,16 @@ for repo in "${repositories[@]}"; do
     echo 'Repo : '$repo
     git clone "$repo"
     cd "$repo_name" || exit
+     git config --global user.email "rahul.kumar@harness.io"
+    git config --global user.name "rahkumar56"
+    git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     pwd
     ls -la
     base_ranch=$(git rev-parse --abbrev-ref HEAD)
     # Print the branch name
     echo "Current Git branch: $base_ranch"
     git checkout -b $feature_branch
+    git push origin $feature_branch
     git fetch origin
     git pull origin
     #Update go version in files
@@ -122,9 +126,7 @@ for repo in "${repositories[@]}"; do
     echo $pat_token
     echo $pat_token |base64
     
-    git config --global user.email "rahul.kumar@harness.io"
-    git config --global user.name "rahkumar56"
-    git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
+   
     # Push the changes to a new branch   
     git add .
     git commit -m "Update Go version to $new_go_version"
