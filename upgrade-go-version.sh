@@ -102,7 +102,12 @@ for repo in "${repositories[@]}"; do
     echo 'Repo : '$repo
     git clone "$repo"
     cd "$repo_name" || exit
-     git config --global user.email "rahul.kumar@harness.io"
+     #Get Repo info
+    get_repo_info "https://github.com/drone-plugins/drone-gcs.git"
+    echo "***************in call Repository Name: $repo_name"
+    echo "**************in call Repository Owner: $repo_owner"
+    
+    git config --global user.email "rahul.kumar@harness.io"
     git config --global user.name "rahkumar56"
     git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     pwd
@@ -118,10 +123,7 @@ for repo in "${repositories[@]}"; do
     update_version ".drone.yml"
     update_version "go.mod"
 
-    #Get Repo info
-    get_repo_info "https://github.com/drone-plugins/drone-gcs.git"
-    echo "***************in call Repository Name: $repo_name"
-    echo "**************in call Repository Owner: $repo_owner"
+   
 
     echo $pat_token
     echo $pat_token |base64
