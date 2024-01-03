@@ -119,8 +119,8 @@ for repo in "${repositories[@]}"; do
     base_ranch=$(git rev-parse --abbrev-ref HEAD)
     # Print the branch name
     echo "Current Git branch: $base_ranch"
-    git checkout -b updategorahul
-    git push origin updategorahul
+    git checkout -b $feature_branch
+    git push origin $feature_branch
     git fetch origin
     git pull origin
     #Update go version in files
@@ -136,8 +136,8 @@ for repo in "${repositories[@]}"; do
     # Push the changes to a new branch   
     git add .
     git commit -m "Update Go version to $new_go_version"
-    git push origin updategorahul
-
+    git push origin $feature_branch
+    
     # Create a pull request
     # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
     # Example for GitHub using Hub:
@@ -150,7 +150,7 @@ for repo in "${repositories[@]}"; do
     --data '{
         "title": "Updated go version",
         "body": "Please pull these awesome changes in!",
-        "head": "$repo_owner:updategorahul",
+        "head": "$repo_owner:$feature_branch",
         "base": "$base_ranch"
     }'
 
