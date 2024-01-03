@@ -83,7 +83,7 @@ get_repo_info() {
 #repositories=(<+pipeline.variables.repoUrl>)
 echo 'Inside pipeline file'
 echo 'feature_branch: ' $feature_branch
-echo 'repositoriesUrls :' $inp_repositories
+echo 'repositoriesUrls : ' $inp_repositories
 echo 'pat_token: ' $pat_token
 #input repo urls
 IFS=',' read -ra repositories <<< "$inp_repositories"
