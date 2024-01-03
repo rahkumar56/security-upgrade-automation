@@ -23,7 +23,7 @@ update_version() {
 
     if [ "$filename" = ".drone.yml" ]; then
         echo '************************Before change start************************'
-        cat "$filename"
+       # cat "$filename"
         echo '************************Before change end************************'
 
         # Search for the existing Go version and replace it with the new version
@@ -35,12 +35,12 @@ update_version() {
 
         # Commit the changes
         echo '************************After change start************************'
-        cat "$filename"
+        #cat "$filename"
         echo '************************After change end************************'
      elif [ "$filename" = "go.mod" ]; then
         # Your additional condition for ".anotherfile"
         echo '************************Before change start************************'
-        cat "$filename"
+        #cat "$filename"
         echo '************************Before change end************************'
 
         # Search for the existing Go version and replace it with the new version
@@ -52,7 +52,7 @@ update_version() {
 
         # Commit the changes
         echo '************************After change start************************'
-        cat "$filename"
+       # cat "$filename"
         echo '************************After change end************************'
         # Add your logic for ".anotherfile" here
     else
@@ -111,7 +111,7 @@ for repo in "${repositories[@]}"; do
     git clone "$repo"
     cd "$repo_name" || exit
      #Get Repo info
-    get_repo_info "https://github.com/drone-plugins/drone-gcs.git"
+    get_repo_info $repo
     echo "***************in call Repository Name: $repo_name"
     echo "**************in call Repository Owner: $repo_owner"
     
@@ -131,12 +131,9 @@ for repo in "${repositories[@]}"; do
     update_version ".drone.yml"
     update_version "go.mod"
 
-   
-
     echo $pat_token
     echo $pat_token |base64
     
-   
     # Push the changes to a new branch   
     git add .
     git commit -m "Update Go version to $new_go_version"
