@@ -1,3 +1,23 @@
+get_repo_info() {
+    local repo_url="$1"
+
+    # Remove '.git' from the end of the URL
+    repo_url="${repo_url%.git}"
+
+    # Split the URL by "/"
+    IFS="/" read -ra url_parts <<< "$repo_url"
+
+    # Get the length of the array
+    length=${#url_parts[@]}
+
+    # Extract repository name and owner
+    repo_name="${url_parts[length-1]}"
+    repo_owner="${url_parts[length-2]}"
+
+    echo "Repository Name: $repo_name"
+    echo "Repository Owner: $repo_owner"
+}
+
 for repo in "${repositories[@]}"; do
     # Clone the repository
     repo_name=$(basename "$repo" .git)
