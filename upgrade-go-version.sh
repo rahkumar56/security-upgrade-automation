@@ -73,8 +73,8 @@ get_repo_info() {
     length=${#url_parts[@]}
 
     # Extract repository name and owner
-    repo_name="${url_parts[length-1]}"
-    repo_owner="${url_parts[length-2]}"
+    export repo_name="${url_parts[length-1]}"
+    export repo_owner="${url_parts[length-2]}"
 
     echo "Repository Name: $repo_name"
     echo "Repository Owner: $repo_owner"
@@ -120,7 +120,7 @@ for repo in "${repositories[@]}"; do
     git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     pwd
     ls -la
-    base_ranch=$(git rev-parse --abbrev-ref HEAD)
+    export base_ranch=$(git rev-parse --abbrev-ref HEAD)
     # Print the branch name
     echo "Current Git branch: $base_ranch"
     git checkout -b $feature_branch
