@@ -106,6 +106,7 @@ hub version
 # Loop through the repositories
 for repo in "${repositories[@]}"; do
     # Clone the repository
+     echo "***************Started Execution for the repo: $repo_name \n\n"
     repo_name=$(basename "$repo" .git)
     echo 'Repo : '$repo
     git clone "$repo"
@@ -144,38 +145,15 @@ for repo in "${repositories[@]}"; do
     # Example for GitHub using Hub:
     #hub pull-request -m "Update Go version to $new_go_version"
     echo 'commit and push is success'
-
+    #Generate PR 
     echo 'Going to hit generate PR curl in side sh file.'
     echo $repo_owner
     echo $repo_name
     echo $pat_token |base64
     echo $pat_token 
-   echo $feature_branch
-   echo $base_ranch
-
- echo 'curl --location https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls \
-    --header Accept: application/vnd.github+json \
-    --header Authorization: Bearer '$pat_token' \
-    --header Content-Type: application/json \
-    --data {
-        "title": "Updated go version",
-        "body": "Please pull these awesome changes in!",
-        "head": "'$repo_owner':'$feature_branch'",
-        "base": "'$base_ranch'"
-    }'
-
-    echo 'curl --location https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls \
-    --header Accept: application/vnd.github+json \
-    --header Authorization: Bearer '$pat_token' \
-    --header Content-Type: application/json \
-    --data {
-        "title": "Updated go version",
-        "body": "Please pull these awesome changes in!",
-        "head": "'$repo_owner':'$feature_branch'",
-        "base": "'$base_ranch'"
-    }'
-
-     url='https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls'
+    echo $feature_branch
+    echo $base_ranch
+    url='https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls'
     echo $url
     body='{ "title":"Updated go version", "body":"Please pull these awesome changes in!", "head":"'$repo_owner':'$feature_branch'", "base":"'$base_ranch'" }'
     echo $body
@@ -185,17 +163,6 @@ for repo in "${repositories[@]}"; do
     --header "Authorization: Bearer $pat_token" \
     --header 'Content-Type: application/json' \
     --data "$body"
-
-    # # curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
-    # # --header 'Accept: application/vnd.github+json' \
-    # # --header 'Authorization: Bearer $pat_token' \
-    # # --header 'Content-Type: application/json' \
-    # # --data '{
-    # #     "title": "Updated go version",
-    # #     "body": "Please pull these awesome changes in!",
-    # #     "head": "$repo_owner:$feature_branch",
-    # #     "base": "$base_ranch"
-    # }'
-
+    echo "***************Ended Execution for the repo: $repo_name \n\n"
         cd ..
     done
