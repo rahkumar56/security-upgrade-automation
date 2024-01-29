@@ -175,16 +175,32 @@ for repo in "${repositories[@]}"; do
         "base": "'$base_ranch'"
     }'
 
-    curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
-    --header 'Accept: application/vnd.github+json' \
-    --header 'Authorization: Bearer $pat_token' \
-    --header 'Content-Type: application/json' \
-    --data '{
+     url='https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls'
+    echo $url
+    body='{
         "title": "Updated go version",
         "body": "Please pull these awesome changes in!",
-        "head": "$repo_owner:$feature_branch",
-        "base": "$base_ranch"
+        "head": "'$repo_owner':'$feature_branch'",
+        "base": "'$base_ranch'"
     }'
+
+    echo $body
+    curl --verbose --location $url \
+    --header 'Accept: application/vnd.github+json' \
+    --header 'Authorization: Bearer '$pat_token \
+    --header 'Content-Type: application/json' \
+    --data $body
+
+    # # curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
+    # # --header 'Accept: application/vnd.github+json' \
+    # # --header 'Authorization: Bearer $pat_token' \
+    # # --header 'Content-Type: application/json' \
+    # # --data '{
+    # #     "title": "Updated go version",
+    # #     "body": "Please pull these awesome changes in!",
+    # #     "head": "$repo_owner:$feature_branch",
+    # #     "base": "$base_ranch"
+    # }'
 
         cd ..
     done
