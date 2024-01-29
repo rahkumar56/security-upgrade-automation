@@ -179,6 +179,7 @@ for repo in "${repositories[@]}"; do
     echo $url
     body='{ "title": "Updated go version", "body": "Please pull these awesome changes in!", "head": "'$repo_owner':'$feature_branch'",  "base": "'$base_ranch'" }'
     echo $body
+    echo $pat_token
     curl --verbose --location $url \
     --header 'Accept: application/vnd.github+json' \
     --header 'Authorization: Bearer '$pat_token \
