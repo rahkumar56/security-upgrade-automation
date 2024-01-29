@@ -149,6 +149,7 @@ for repo in "${repositories[@]}"; do
     echo $repo_owner
     echo $repo_name
     echo $pat_token |base64
+    echo $pat_token 
    echo $feature_branch
    echo $base_ranch
 
