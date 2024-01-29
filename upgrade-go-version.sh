@@ -144,6 +144,36 @@ for repo in "${repositories[@]}"; do
     # Example for GitHub using Hub:
     #hub pull-request -m "Update Go version to $new_go_version"
     echo 'commit and push is success'
+
+    echo 'Going to hit generate PR curl in side sh file.'
+    echo $repo_owner
+    echo $repo_name
+    echo $pat_token |base64
+   echo $feature_branch
+   echo $base_ranch
+
+ echo 'curl --location https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls \
+    --header Accept: application/vnd.github+json \
+    --header Authorization: Bearer '$pat_token' \
+    --header Content-Type: application/json \
+    --data {
+        "title": "Updated go version",
+        "body": "Please pull these awesome changes in!",
+        "head": "'$repo_owner':'$feature_branch'",
+        "base": "'$base_ranch'"
+    }'
+
+    echo 'curl --location https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls \
+    --header Accept: application/vnd.github+json \
+    --header Authorization: Bearer '$pat_token' \
+    --header Content-Type: application/json \
+    --data {
+        "title": "Updated go version",
+        "body": "Please pull these awesome changes in!",
+        "head": "'$repo_owner':'$feature_branch'",
+        "base": "'$base_ranch'"
+    }'
+
     curl --location 'https://api.github.com/repos/$repo_owner/$repo_name/pulls' \
     --header 'Accept: application/vnd.github+json' \
     --header 'Authorization: Bearer $pat_token' \
