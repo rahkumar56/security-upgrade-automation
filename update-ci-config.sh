@@ -188,13 +188,124 @@ echo "Versions replaced successfully!"
 }
 
 
+get_repo_info() {
+    local repo_url="$1"
+
+    # Remove '.git' from the end of the URL
+    repo_url="${repo_url%.git}"
+
+    # Split the URL by "/"
+    IFS="/" read -ra url_parts <<< "$repo_url"
+
+    # Get the length of the array
+    length=${#url_parts[@]}
+
+    # Extract repository name and owner
+    export hc_repo_name="${url_parts[length-1]}"
+    export hc_repo_owner="${url_parts[length-2]}"
+
+    echo "Repository Name: $hc_repo_name"
+    echo "Repository Owner: $hc_repo_owner"
+}
+
+clone_repo(){
+    local repo="$1"
+    local feature_branch="$2"
+    # Clone the repository
+     echo "***************clone repo repo: $repo \n\n"
+    repo_name=$(basename "$repo" .git)
+    echo 'Repo : '$repo
+
+     get_repo_info $repo
+    echo "***************in call Repository Name: $hc_repo_name"
+    echo "**************in call Repository Owner: $hc_repo_owner"
+    
+    git config --global user.email "rahul.kumar@harness.io"
+    git config --global user.name "rahkumar56"
+    git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
+    pwd
+
+    git clone "$repo"
+    cd "$repo_name" || exit
+     #Get Repo info
+    # get_repo_info $repo
+    # echo "***************in call Repository Name: $hc_repo_name"
+    # echo "**************in call Repository Owner: $hc_repo_owner"
+    
+    # git config --global user.email "rahul.kumar@harness.io"
+    # git config --global user.name "rahkumar56"
+    # git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
+    pwd
+    ls -la
+    export base_ranch=$(git rev-parse --abbrev-ref HEAD)
+    # Print the branch name
+    echo "Current Git branch: $base_ranch"
+    git checkout -b $feature_branch
+    git push origin $feature_branch
+    git fetch origin
+    git pull origin
+}
+
+commit_generate_pr(){
+     echo $pat_token
+    echo $pat_token |base64
+    
+    # Push the changes to a new branch  
+    git status 
+    git add .
+    git status
+    git commit -m "Updated ci-manager-config.yml with latest plugin versions"
+    git push origin $feature_branch
+    
+    # Create a pull request
+    # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
+    # Example for GitHub using Hub:
+    #hub pull-request -m "Update Go version to $new_go_version"
+    echo 'commit and push is success'
+    #Generate PR 
+    echo 'Going to hit generate PR curl in side sh file.'ec
+    echo $hc_repo_name
+    echo $hc_repo_owner
+    echo $pat_token |base64
+    echo $pat_token 
+    echo $feature_branch
+    echo $base_ranch
+    url='https://api.github.com/repos/'$hc_repo_owner'/'$hc_repo_name'/pulls'
+    echo $url
+    body='{ "title":"Updated ci-manager-config.yml with latest plugin versions", "body":"Updated ci-manager-config.yml with latest plugin versions.", "head":"'$hc_repo_owner':'$feature_branch'", "base":"'$base_ranch'" }'
+    echo $body
+    echo $pat_token
+    # curl --verbose --location "$url" \
+    # --header 'Accept: application/vnd.github+json' \
+    # --header "Authorization: Bearer $pat_token" \
+    # --header 'Content-Type: application/json' \
+    # --data "$body"
+    curl_response=$(curl --location "$url" \
+    --header 'Accept: application/vnd.github+json' \
+    --header "Authorization: Bearer $pat_token" \
+    --header 'Content-Type: application/json' \
+    --data "$body")
+    # Parse the latest version from the response using jq
+    pr_url=$(echo "$curl_response" | jq -r '.url')
+
+    #echo "***************Ended Execution for the repo: $repo_name \n\n PR url: $pr_url"
+    echo $pr_url
+
+}
+
 image_keys=("kaniko" "kaniko-ecr" "kaniko-acr" "kaniko-gcr" "drone-git" "gcs" "s3" "artifactory" "cache" "docker" "acr" "ecr" "gcr" "gar")
 repo_owner_values=("drone/drone-kaniko" "drone/drone-kaniko" "drone/drone-kaniko" "drone/drone-kaniko" "wings-software/drone-git" "drone-plugins/drone-gcs" "drone-plugins/drone-s3" "harness/drone-artifactory" "drone-plugins/drone-meltwater-cache" "drone-plugins/drone-docker" "drone-plugins/drone-docker" "drone-plugins/drone-docker" "drone-plugins/drone-docker" "drone-plugins/drone-docker"  )
 excluded_reponame=( "slsa-plugin" "ssca-plugin" "null" "sto-plugin")
-#yaml_file="/Users/rahulkumar/Documents/security_upgrade/ci-manager-config.yml"
+yaml_file="332-ci-manager/config/ci-manager-config.yml"
 #pat_token='<PAT_Token>'
+repo_url='https://github.com/harness/harness-core.git'
+#feature_branch='testRahul'
+
 echo 'yaml_file path: ' $yaml_file
 echo 'pat_token: ' $pat_token
+echo 'feature_branch: '$feature_branch
+#clone repo and switch dir into repo
+clone_repo $repo_url $feature_branch
 
 # Extract image names from the YAML file and update their versions
  image_names=$(yq eval '.ciExecutionServiceConfig.stepConfig.*.image' "$yaml_file" | tr -d '"')
@@ -208,3 +319,5 @@ echo 'pat_token: ' $pat_token
 vmnames=$(yq eval '.ciExecutionServiceConfig.stepConfig.vmContainerlessStepConfig.*.name' "$yaml_file" | tr -d '"')
 echo 'image_names:\n' $vmnames
 update_vmnames "${yaml_file}" "${vmnames}" "${pat_token}"
+
+commit_generate_pr
