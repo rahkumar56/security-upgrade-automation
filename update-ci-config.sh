@@ -226,15 +226,16 @@ clone_repo(){
     pwd
 
     git clone "$repo"
+    git clone "https://rahkumar56:${pat_token}@github.com/${hc_repo_owner}/${hc_repo_name}.git"
     cd "$repo_name" || exit
      #Get Repo info
     # get_repo_info $repo
     # echo "***************in call Repository Name: $hc_repo_name"
     # echo "**************in call Repository Owner: $hc_repo_owner"
     
-    # git config --global user.email "rahul.kumar@harness.io"
-    # git config --global user.name "rahkumar56"
-    # git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
+     git config --global user.email "rahul.kumar@harness.io"
+     git config --global user.name "rahkumar56"
+     git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
     pwd
     ls -la
     export base_ranch=$(git rev-parse --abbrev-ref HEAD)
