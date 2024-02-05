@@ -288,8 +288,9 @@ commit_generate_pr(){
     --data "$body")
     # Parse the latest version from the response using jq
     pr_url=$(echo "$curl_response" | jq -r '.url')
+    echo 'slack_webhook url::'$slack_webhook
 
-    curl --location 'https://hooks.slack.com/services/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' \
+    curl --location '$slack_webhook' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'payload={"channel": "security_automation", "username": "Security-Automation","type": "mrkdwn", "text":"*Security Automation : PR Is generated for these repos :* :white_check_mark:$pr_url", "icon_emoji": ":harnesshd:"}'
     #echo "***************Ended Execution for the repo: $repo_name \n\n PR url: $pr_url"
@@ -308,8 +309,10 @@ repo_url='https://github.com/harness/harness-core.git'
 echo 'yaml_file path: ' $yaml_file
 echo 'pat_token: ' $pat_token
 echo 'feature_branch: '$feature_branch
+echo 'slack_webhook:: '$slack_webhook
 #clone repo and switch dir into repo
 clone_repo $repo_url $feature_branch
+
 
 # Extract image names from the YAML file and update their versions
  image_names=$(yq eval '.ciExecutionServiceConfig.stepConfig.*.image' "$yaml_file" | tr -d '"')
