@@ -323,4 +323,4 @@ clone_repo $repo_url $feature_branch
 vmnames=$(yq eval '.ciExecutionServiceConfig.stepConfig.vmContainerlessStepConfig.*.name' "$yaml_file" | tr -d '"')
 echo 'image_names:\n' $vmnames
 update_vmnames "${yaml_file}" "${vmnames}" "${pat_token}"
-#commit_generate_pr
+commit_generate_pr
