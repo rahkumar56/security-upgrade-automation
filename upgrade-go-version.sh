@@ -124,7 +124,7 @@ commit_generate_pr(){
     git status
     git commit -m "Updated ci-manager-config.yml with latest plugin versions"
     git push origin $feature_branch
-    
+
     # Create a pull request
     # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
     # Example for GitHub using Hub:
@@ -143,14 +143,9 @@ commit_generate_pr(){
     echo $base_ranch
     url='https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls'
     echo $url
-    body='{ "title":"Updated ci-manager-config.yml with latest plugin versions", "body":"Updated ci-manager-config.yml with latest plugin versions.", "head":"'$repo_owner':'$feature_branch'", "base":"'$base_ranch'" }'
+    body='{ "title":"Updated go version to the latest version", "body":"Updated go version to the latest version", "head":"'$repo_owner':'$feature_branch'", "base":"'$base_ranch'" }'
     echo $body
     echo $pat_token
-    # curl --verbose --location "$url" \
-    # --header 'Accept: application/vnd.github+json' \
-    # --header "Authorization: Bearer $pat_token" \
-    # --header 'Content-Type: application/json' \
-    # --data "$body"
     curl_response=$(curl --location "$url" \
     --header 'Accept: application/vnd.github+json' \
     --header "Authorization: Bearer $pat_token" \
@@ -165,8 +160,6 @@ commit_generate_pr(){
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode "payload={\"channel\": \"security_automation\", \"username\": \"Security-Automation\", \"type\": \"mrkdwn\", \"text\": \"*Security Automation: PR is generated for plugins repos:* :white_check_mark: $pr_url\", \"icon_emoji\": \":harnesshd:\"}")
     echo "Response: $response"
-    #echo "***************Ended Execution for the repo: $repo_name \n\n PR url: $pr_url"
-    echo $pr_url
 }
 
 #repositories=(<+pipeline.variables.repoUrl>)
@@ -183,7 +176,7 @@ latest_version=$(get_latest_go_version)
 echo "Latest version value in checkfornew verson:$latest_version"
 new_go_version=$(extract_version "$latest_version")
 echo 'Latest new_go_version:'$new_go_version
-new_go_version='1.20'
+#new_go_version='1.20'
 echo 'Latest new_go_version:'$new_go_version
 
 
@@ -199,63 +192,11 @@ for repo in "${repositories[@]}"; do
     repo_name=$(basename "$repo" .git)
     echo 'Repo : '$repo
     clone_repo $repo $feature_branch
-    # git clone "$repo"
-    # cd "$repo_name" || exit
-    #  #Get Repo info
-    # get_repo_info $repo
-    # echo "***************in call Repository Name: $repo_name"
-    # echo "**************in call Repository Owner: $repo_owner"
-    
-    # git config --global user.email "rahul.kumar@harness.io"
-    # git config --global user.name "rahkumar56"
-    # git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
-    # pwd
-    # ls -la
-    # export base_ranch=$(git rev-parse --abbrev-ref HEAD)
-    # # Print the branch name
-    # echo "Current Git branch: $base_ranch"
-    # git checkout -b $feature_branch
-    # git push origin $feature_branch
-    # git fetch origin
-    # git pull origin
     #Update go version in files
     update_version ".drone.yml"
     update_version "go.mod"
-
-    echo $pat_token
-    echo $pat_token |base64
-    
-    # Push the changes to a new branch   
-    # git add .
-    # git commit -m "Update Go version to $new_go_version"
-    # git push origin $feature_branch
-    
-    # # Create a pull request
-    # # NOTE: You'll need to integrate with a platform-specific API or use a tool like Hub for GitHub.
-    # # Example for GitHub using Hub:
-    # #hub pull-request -m "Update Go version to $new_go_version"
-    # echo 'commit and push is success'
-    # #Generate PR 
-    # echo 'Going to hit generate PR curl in side sh file.'
-    # echo $repo_owner
-    # echo $repo_name
-    # echo $pat_token |base64
-    # echo $pat_token 
-    # echo $feature_branch
-    # echo $base_ranch
-    # url='https://api.github.com/repos/'$repo_owner'/'$repo_name'/pulls'
-    # echo $url
-    # body='{ "title":"Updated go version", "body":"Please pull these awesome changes in!", "head":"'$repo_owner':'$feature_branch'", "base":"'$base_ranch'" }'
-    # echo $body
-    # echo $pat_token
-    # curl --verbose --location "$url" \
-    # --header 'Accept: application/vnd.github+json' \
-    # --header "Authorization: Bearer $pat_token" \
-    # --header 'Content-Type: application/json' \
-    # --data "$body"
     commit_generate_pr
-    echo $pat_token
-    echo $pat_token |base64
+    
     echo "***************Ended Execution for the repo: $repo_name \n\n"
         cd ..
     done
