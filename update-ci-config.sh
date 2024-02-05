@@ -289,9 +289,9 @@ commit_generate_pr(){
     # Parse the latest version from the response using jq
     pr_url=$(echo "$curl_response" | jq -r '.url')
 
-    curl -X POST --data-urlencode "payload={\"channel\": \"<+pipeline.variables.channel_name>
-    \", \"username\": \"Security-Automation\",\"type\": \"mrkdwn\", \"text\":\"*Security Automation : PR Is generated for ci-manager-config.yml file :* :white_check_mark: :$pr_url", \"icon_emoji\": \":harnesshd:\"}" https://hooks.slack.com/services/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
-
+    curl --location 'https://hooks.slack.com/services/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' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'payload={"channel": "security_automation", "username": "Security-Automation","type": "mrkdwn", "text":"*Security Automation : PR Is generated for these repos :* :white_check_mark:$pr_url", "icon_emoji": ":harnesshd:"}'
     #echo "***************Ended Execution for the repo: $repo_name \n\n PR url: $pr_url"
     echo $pr_url
 
@@ -323,5 +323,4 @@ clone_repo $repo_url $feature_branch
 vmnames=$(yq eval '.ciExecutionServiceConfig.stepConfig.vmContainerlessStepConfig.*.name' "$yaml_file" | tr -d '"')
 echo 'image_names:\n' $vmnames
 update_vmnames "${yaml_file}" "${vmnames}" "${pat_token}"
-
-commit_generate_pr
+#commit_generate_pr
