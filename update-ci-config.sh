@@ -288,11 +288,17 @@ commit_generate_pr(){
     --data "$body")
     # Parse the latest version from the response using jq
     pr_url=$(echo "$curl_response" | jq -r '.url')
+    echo 'pr_url::'$pr_url
     echo 'slack_webhook url::'$slack_webhook
 
-    curl --location '$slack_webhook' \
+#     curl --location '$slack_webhook' \
+# --header 'Content-Type: application/x-www-form-urlencoded' \
+# --data-urlencode 'payload={"channel": "security_automation", "username": "Security-Automation","type": "mrkdwn", "text":"*Security Automation : PR Is generated for these repos :* :white_check_mark:$pr_url", "icon_emoji": ":harnesshd:"}'
+    response=$(curl --location --silent --output - "$slack_webhook" \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'payload={"channel": "security_automation", "username": "Security-Automation","type": "mrkdwn", "text":"*Security Automation : PR Is generated for these repos :* :white_check_mark:$pr_url", "icon_emoji": ":harnesshd:"}'
+--data-urlencode 'payload={"channel": "security_automation", "username": "Security-Automation", "type": "mrkdwn", "text": "*Security Automation: PR Is generated for these repos:* :white_check_mark: $pr_url", "icon_emoji": ":harnesshd:"}')
+
+    echo "Response: $response"
     #echo "***************Ended Execution for the repo: $repo_name \n\n PR url: $pr_url"
     echo $pr_url
 
