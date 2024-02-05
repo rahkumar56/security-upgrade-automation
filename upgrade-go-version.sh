@@ -198,7 +198,7 @@ for repo in "${repositories[@]}"; do
      echo "***************Started Execution for the repo: $repo_name \n\n"
     repo_name=$(basename "$repo" .git)
     echo 'Repo : '$repo
-    git clone "$repo"
+    clone_repo $repo $feature_branch
     # git clone "$repo"
     # cd "$repo_name" || exit
     #  #Get Repo info
