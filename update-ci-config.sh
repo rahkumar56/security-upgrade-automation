@@ -17,38 +17,6 @@ fetch_latest_version() {
     echo "${version_without_v}"
 }
 
-# fetch_latest_version() {
-#     local repo_url="$1"
-#     local pat_token="$2"
-
-#     # Print the curl command
-#     echo "Fetching latest version for repository: ${repo_url}"
-#     curl_command="curl --location '${repo_url}/releases/latest' \
-#         --header 'Accept: application/vnd.github.v3+json' \
-#         --header 'Authorization: Bearer ${pat_token}' \
-#         --header 'X-GitHub-Api-Version: 2022-11-28'"
-
-#     #echo "Executing curl command:"
-#     #echo "$curl_command"
-
-#     # Get the latest release from the GitHub API
-#     response=$(eval "$curl_command")
-
-#     # Print the response
-#     #echo "Curl Response:"
-#    # echo "$response"
-
-#     # Parse the latest version from the response using jq
-#     latest_ver=$(echo "$response" | jq -r '.tag_name')
-
-#     # Remove 'v' prefix from version, if present
-#     version_without_v="${latest_ver#v}"
-
-#     #echo "Latest Version without 'v': ${version_without_v}"
-
-#     echo "${version_without_v}"
-# }
-
 
 # Function to replace the version in the step config image
 replace_version() {
@@ -225,7 +193,6 @@ clone_repo(){
     git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
     pwd
 
-    git clone "$repo"
     git clone "https://rahkumar56:${pat_token}@github.com/${hc_repo_owner}/${hc_repo_name}.git"
     cd "$repo_name" || exit
      #Get Repo info
