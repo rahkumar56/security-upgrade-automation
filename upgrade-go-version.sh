@@ -97,13 +97,13 @@ clone_repo(){
     git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     pwd
 
-    git clone "$repo"
+   # git clone "$repo"
     git clone "https://rahkumar56:${pat_token}@github.com/${repo_owner}/${repo_name}.git"
     cd "$repo_name" || exit
     #Git Config
      git config --global user.email "rahul.kumar@harness.io"
      git config --global user.name "rahkumar56"
-     git remote set-url origin https://rahkumar56:$pat_token@github.com/$hc_repo_owner/$hc_repo_name
+     git remote set-url origin https://rahkumar56:$pat_token@github.com/$repo_owner/$repo_name
     pwd
     ls -la
     export base_ranch=$(git rev-parse --abbrev-ref HEAD)
