@@ -54,7 +54,7 @@ def clone_repository(repo_url):
     reponame=create_repo_folder(repo_url)
     subprocess.run(["git", "config", "--global", "user.email", "rahul.kumar@harness.io"])
     subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
-    Repo.git.remote("set-url", "origin", remote_url)
+    #Repo.git.remote("set-url", "origin", remote_url)
     repo_name = repo_url.split('/')[-1].split('.')[0]
     global repo_owner
     repo_owner = repo_url.split('/')[-2]
