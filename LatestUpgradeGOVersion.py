@@ -244,10 +244,10 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     # Create a pull request using GitHub API
     #g = Github(pat_token)  # Replace with your GitHub personal access token
     #repo_name = repo.remote().url.split('/')[-1].split('.')[0]
-    #repo_owmner = repo.remote().url.split('/')[-2]
-    feature_branch = repo_owmner + ":" + feature_branch
+    #repo_owner = repo.remote().url.split('/')[-2]
+    feature_branch = repo_owner + ":" + feature_branch
     print(f"repo_name::{repo_name}\n repo_owner::{repo_owner}\nfeature_branch::{feature_branch}\nbase_branch::{base_branch}")
-    github_repo = g.get_repo(repo_owmner+"/"+repo_name)
+    github_repo = g.get_repo(repo_owner+"/"+repo_name)
     pull_request = github_repo.create_pull(title=title, body=body, head=feature_branch, base=base_branch)
     return pull_request
 
