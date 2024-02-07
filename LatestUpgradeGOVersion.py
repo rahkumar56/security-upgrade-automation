@@ -54,13 +54,16 @@ def clone_repository(repo_url):
     reponame=create_repo_folder(repo_url)
     subprocess.run(["git", "config", "--global", "user.email", "rahul.kumar@harness.io"])
     subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
-    Repo.clone_from(repo_url, reponame)
+    Repo.git.remote("set-url", "origin", remote_url)
     repo_name = repo_url.split('/')[-1].split('.')[0]
     global repo_owner
     repo_owner = repo_url.split('/')[-2]
     remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owner}/{repo_name}"
     print(f"Remote repo url::{remote_url}")
     subprocess.run(["git", "remote", "set-url", "origin", remote_url])
+    Repo.clone_from(repo_url, reponame)
+   
+   
 
 
 # Function to read the existing SCM version from delegate-service-config.yml
