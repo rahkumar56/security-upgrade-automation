@@ -58,10 +58,10 @@ def clone_repository(repo_url):
     repo_name = repo_url.split('/')[-1].split('.')[0]
     global repo_owner
     repo_owner = repo_url.split('/')[-2]
-    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owner}/{repo_name}"
+    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owner}/{repo_name}.git"
     print(f"Remote repo url::{remote_url}")
     subprocess.run(["git", "remote", "set-url", "origin", remote_url])
-    Repo.clone_from(repo_url, reponame)
+    Repo.clone_from(remote_url, reponame)
    
    
 
