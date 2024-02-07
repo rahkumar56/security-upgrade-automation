@@ -317,12 +317,12 @@ if __name__ == "__main__":
         if repo_name == 'harness-core':
             for module in module_list:
                 print(f"module::{module}")
-                repo_path = os.path.join(repo_name, module)
+                repo_path = os.path.join(repo_folder, module)
                 print(f"repo_path : : {repo_path}")
                 update_go_version(repo_path, latest_go_version)
         else:
             # Update SCM version in delegate-service-config.yml and all files
-            update_go_version(repo_name, latest_go_version)
+            update_go_version(repo_folder, latest_go_version)
 
         # Create a pull request
         pr = create_pull_request(repo_folder, feature_branch, base_branch, pr_title, pr_body)
