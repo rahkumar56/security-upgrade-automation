@@ -235,7 +235,7 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
 
     # Add and commit changes
     repo.git.add(A=True)
-    repo.git.commit('-m', 'Update keyword')
+    repo.git.commit('-m', 'Update GO Version to latest version in all the files')
 
     # Push changes to the new branch
     repo.git.push(origin, feature_branch)
