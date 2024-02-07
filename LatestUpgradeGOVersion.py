@@ -217,7 +217,11 @@ def compare_versions(version1, version2):
 def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     repo = Repo(repo_path)
     origin = repo.remote('origin')
-
+    subprocess.run(["git", "config", "--global", "user.email", "rahul.kumar@harness.io"])
+    subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
+    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owmner}/{repo_name}"
+    print(f"Remote repo url::{remote_url}")
+    subprocess.run(["git", "remote", "set-url", "origin", remote_url])
     # Create a new branch
     # repo.git.checkout(base_branch)
     # repo.git.pull()
