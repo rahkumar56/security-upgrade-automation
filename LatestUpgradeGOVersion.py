@@ -56,8 +56,9 @@ def clone_repository(repo_url):
     subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
     Repo.clone_from(repo_url, reponame)
     repo_name = repo_url.split('/')[-1].split('.')[0]
-    repo_owmner = repo_url.split('/')[-2]
-    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owmner}/{repo_name}"
+    global repo_owner
+    repo_owner = repo_url.split('/')[-2]
+    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owner}/{repo_name}"
     print(f"Remote repo url::{remote_url}")
     subprocess.run(["git", "remote", "set-url", "origin", remote_url])
 
@@ -219,7 +220,7 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     origin = repo.remote('origin')
     subprocess.run(["git", "config", "--global", "user.email", "rahul.kumar@harness.io"])
     subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
-    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owmner}/{repo_name}"
+    remote_url = f"https://rahkumar56:{pat_token}@github.com/{repo_owner}/{repo_name}"
     print(f"Remote repo url::{remote_url}")
     subprocess.run(["git", "remote", "set-url", "origin", remote_url])
     # Create a new branch
@@ -280,6 +281,7 @@ pr_body = "This pull request updates the go version in all files."
 #feature_branch = "test_rah22"
 base_branch = None
 repo_name = None
+repo_owner = None
 repo_folder = None
 
 
