@@ -238,7 +238,7 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     # repo.git.pull()
     # repo.git.checkout('-b', feature_branch)
     if not repo.is_dirty():
-        slack_msg = f"No Changes to commit, new_go_version:: {latest_go_version} is equal to existing_go_version ::{existing_go_version}  "
+        slack_msg = f"No Changes to commit, new_go_version:: {latest_go_version} is equal to existing_go_version ::{prod_go_version}  "
         return slack_msg
     # Add and commit changes
     repo.git.add(A=True)
