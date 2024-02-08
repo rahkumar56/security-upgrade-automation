@@ -304,7 +304,6 @@ prod_go_version = None
 # Example usage
 if __name__ == "__main__":
     # Split the repo_url by comma to get individual repository URLs
-    global latest_go_version
     latest_go_version = get_latest_go_version()
     print(f"Latest go version::{latest_go_version}")
     # latest_go_version = "1.22.1"
