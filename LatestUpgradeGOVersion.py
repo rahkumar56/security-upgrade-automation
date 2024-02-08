@@ -66,15 +66,15 @@ def clone_repository(repo_url):
    
 
 
-# Function to read the existing SCM version from delegate-service-config.yml
+# Function to read the existing go version from delegate-service-config.yml
 def read_go_version(directory):
     with open(os.path.join(directory, "go.mod"), "r") as file:
         lines = file.readlines()
 
     for line in lines:
         if line.startswith("go "):
-            existing_scm_version = line.split(" ")[1].strip()
-            return existing_scm_version
+            existing_go_version = line.split(" ")[1].strip()
+            return existing_go_version
 
     return None
 
@@ -130,22 +130,21 @@ def extract_version_from_file(file_path):
         print(f"File not found: {file_path}")
         return None
 
-def update_go_version(repo_path ,new_scm_version):
-    # Read existing SCM version
+def update_go_version(repo_path ,new_go_version):
+    # Read existing Go version
     exclude_folders = ['.git', '.github', '.idea', '.harness', '.aeriform']
-    #existing_scm_version = read_scm_version(repo_path)
-    existing_scm_version = "1.21"
+    existing_go_version = "1.21"
 
-    if existing_scm_version:
+    if existing_go_version:
 
-        if compare_versions(existing_scm_version, new_scm_version) > 0:
+        if compare_versions(existing_go_version, new_go_version) > 0:
             print(
-                f"New version {new_scm_version} is lower than existing version {existing_scm_version}. Keeping the existing version.")
+                f"New version {new_go_version} is lower than existing version {existing_go_version}. Keeping the existing version.")
             return
-        # Search and replace SCM version in all files
-        # search_and_replace(repo_path, existing_scm_version, new_scm_version)
+        # Search and replace Go version in all files
+        # search_and_replace(repo_path, existing_go_version, new_go_version)
 
-        # Update SCM version in all files
+        # Update GO version in all files
         for subdir, _, files in os.walk(repo_path):
             for file in files:
                 file_path = os.path.join(subdir, file)
@@ -167,30 +166,32 @@ def update_go_version(repo_path ,new_scm_version):
                 print(version1)
                 if len(version1) <=0:
                     continue
-                for existing_scm_version in version1:
-                    print(f"Version extracted from {file_path}: {existing_scm_version}")
-
-                    if existing_scm_version is None:
+                for existing_go_version in version1:
+                    print(f"Version extracted from {file_path}: {existing_go_version}")
+                    global prod_go_version
+                    prod_go_version = existing_go_version
+                    print(f"existing_go_version ::{existing_go_version}")
+                    if existing_go_version is None:
                         continue
 
-                    if '.' not in existing_scm_version:
+                    if '.' not in existing_go_version:
                         # Update the version up to the major version only
-                        existing_major_version = existing_scm_version.split('.')[0]
-                        new_major_version = new_scm_version.split('.')[0]
+                        existing_major_version = existing_go_version.split('.')[0]
+                        new_major_version = new_go_version.split('.')[0]
                         content = content.replace(existing_major_version, new_major_version)
                     else:
                         # Update the version up to the minor version if it exists in the existing version
-                        existing_major_version, existing_minor_version = existing_scm_version.split('.')[:2]
-                        new_major_version, new_mid_version, new_minor_version = new_scm_version.split('.')[:3]
+                        existing_major_version, existing_minor_version = existing_go_version.split('.')[:2]
+                        new_major_version, new_mid_version, new_minor_version = new_go_version.split('.')[:3]
 
                         if not new_minor_version:  # If the new version has no minor version
                             content = content.replace(f"{existing_major_version}.{existing_minor_version}",
                                                       new_major_version)
                         else:
-                            if len(existing_scm_version) > 4:
-                                content = content.replace(existing_scm_version, new_scm_version)
+                            if len(existing_go_version) > 4:
+                                content = content.replace(existing_go_version, new_go_version)
                             else:
-                                content = content.replace(existing_scm_version,
+                                content = content.replace(existing_go_version,
                                                           f"{new_major_version}.{new_mid_version}")
 
                     try:
@@ -236,6 +237,9 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     # repo.git.checkout(base_branch)
     # repo.git.pull()
     # repo.git.checkout('-b', feature_branch)
+        if not repo.is_dirty():
+        slack_msg = f"No Changes to commit, new_go_version:: {new_go_version} is equal to existing_go_version ::{existing_go_version}  "
+        return slack_msg
 
     # Add and commit changes
     repo.git.add(A=True)
@@ -252,19 +256,18 @@ def create_pull_request(repo_path, feature_branch, base_branch, title, body):
     print(f"repo_name::{repo_name}\n repo_owner::{repo_owner}\nfeature_branch::{feature_branch}\nbase_branch::{base_branch}")
     github_repo = g.get_repo(repo_owner+"/"+repo_name)
     pull_request = github_repo.create_pull(title=title, body=body, head=feature_branch, base=base_branch)
-    return pull_request
+    slack_msg = f"Latest go version is updated in all required files ::* {pull_request.html_url} "
+    return slack_msg
 
-def send_slack_notification(webhook_url, pr_url):
+def send_slack_notification(webhook_url, message):
     payload = {
     "channel": "security_automation",
     "username": "Security-Automation",
     "type": "mrkdwn",
-    "text": f"*Security Automation: GO Version is upgraded and PR is generated::* {pr_url}   -  :white_check_mark:",
+    "text": f"*Security Automation: {message}  -  :white_check_mark:",
     "icon_emoji": ":harnesshd:"
 }
-    # payload = {
-    #     "text": message
-    # }
+   
     response = requests.post(webhook_url, json=payload)
     if response.status_code == 200:
         print(f"Notification sent successfully::{response}")
@@ -292,14 +295,16 @@ base_branch = None
 repo_name = None
 repo_owner = None
 repo_folder = None
-
+latest_go_version = None
+prod_go_version = None
 
 # Example usage
 if __name__ == "__main__":
     # Split the repo_url by comma to get individual repository URLs
+    global latest_go_version
     latest_go_version = get_latest_go_version()
     print(f"Latest go version::{latest_go_version}")
-    latest_go_version = "1.22.1"
+    #latest_go_version = "1.22.1"
     repo_url = os.getenv("repo_url")
     print(f"repo_url:: {repo_url}")
     feature_branch = os.getenv("feature_branch")
@@ -332,11 +337,11 @@ if __name__ == "__main__":
                 print(f"repo_path : : {repo_path}")
                 update_go_version(repo_path, latest_go_version)
         else:
-            # Update SCM version in delegate-service-config.yml and all files
+            # Update GO version in delegate-service-config.yml and all files
             update_go_version(repo_folder, latest_go_version)
 
         # Create a pull request
-        pr = create_pull_request(repo_folder, feature_branch, base_branch, pr_title, pr_body)
-        print(f"Pull request created: {pr.html_url}")
+        msg = create_pull_request(repo_folder, feature_branch, base_branch, pr_title, pr_body)
+        print(f"Slack Message: {msg}")
         # Send slack notification
-        send_slack_notification(slack_webhook, pr.html_url)
+        send_slack_notification(slack_webhook, msg)
