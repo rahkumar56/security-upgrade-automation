@@ -7,6 +7,8 @@ from urllib.parse import urlparse
 from github import Github
 import requests
 import subprocess
+from datetime import datetime
+
 
 #create branch
 def create_repo_folder(github_url):
@@ -303,6 +305,12 @@ if __name__ == "__main__":
     repo_url = os.getenv("repo_url")
     print(f"repo_url:: {repo_url}")
     feature_branch = os.getenv("feature_branch")
+    current_datetime = datetime.now()
+    # Format the date and time as a string
+    formatted_datetime = current_datetime.strftime("%Y-%m-%d_%H-%M-%S")
+    # Concatenate the string with the formatted date and time
+    feature_branch = feature_branch + formatted_datetime
+    # Output the feature with date and time
     print(f"feature_branch::{feature_branch}")
     slack_webhook = os.getenv("slack_webhook")
     print(f"slack_webhook::{slack_webhook}")
