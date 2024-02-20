@@ -301,7 +301,7 @@ if __name__ == "__main__":
     # Split the repo_url by comma to get individual repository URLs
     latest_go_version = get_latest_go_version()
     print(f"Latest go version::{latest_go_version}")
-    latest_go_version = "1.22.1"
+    #latest_go_version = "1.22.1"
     repo_url = os.getenv("repo_url")
     print(f"repo_url:: {repo_url}")
     feature_branch = os.getenv("feature_branch")
