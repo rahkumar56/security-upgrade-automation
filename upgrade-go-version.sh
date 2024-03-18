@@ -158,7 +158,7 @@ commit_generate_pr(){
     echo 'slack_webhook url::'$slack_webhook
     response=$(curl --location --silent --output - "$slack_webhook" \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode "payload={\"channel\": \"security_automation\", \"username\": \"Security-Automation\", \"type\": \"mrkdwn\", \"text\": \"*Security Automation: PR is generated for plugins repos:* :white_check_mark: $pr_url\", \"icon_emoji\": \":harnesshd:\"}")
+--data-urlencode "payload={\"channel\": \"ci-release-validation\", \"username\": \"ci-release-validation\", \"type\": \"mrkdwn\", \"text\": \"*Security Automation: PR is generated for plugins repos:* :white_check_mark: $pr_url\", \"icon_emoji\": \":harnesshd:\"}")
     echo "Response: $response"
 }
 
