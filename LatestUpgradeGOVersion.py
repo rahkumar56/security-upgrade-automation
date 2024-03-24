@@ -1,4 +1,5 @@
 import re
+import sys
 import shutil
 import git
 from git import Repo
@@ -143,6 +144,7 @@ def update_go_version(repo_path ,new_scm_version):
         if compare_versions(existing_scm_version, new_scm_version) >= 0:
             print(
                 f"New version {new_scm_version} is lower than existing version {existing_scm_version}. Keeping the existing version.")
+            sys.exit()
             return
         # Search and replace SCM version in all files
         # search_and_replace(repo_path, existing_scm_version, new_scm_version)
