@@ -136,7 +136,7 @@ def update_go_version(repo_path ,new_scm_version):
     # Read existing SCM version
     exclude_folders = ['.git', '.github', '.idea', '.harness', '.aeriform']
     #existing_scm_version = read_scm_version(repo_path)
-    existing_scm_version = "1.21"
+    existing_scm_version = "1.22"
 
     if existing_scm_version:
 
