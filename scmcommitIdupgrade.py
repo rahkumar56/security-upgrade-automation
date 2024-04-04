@@ -52,9 +52,6 @@ def create_branch(repo_path, feature_branch):
 # Function to clone a repository
 def clone_repository(repo_url):
     reponame = create_repo_folder(repo_url)
-    # subprocess.run(["git", "config", "--global", "user.email", "rahul.kumar@harness.io"])
-    # subprocess.run(["git", "config", "--global", "user.name", "rahkumar56"])
-    # Repo.git.remote("set-url", "origin", remote_url)
     repo_name = repo_url.split('/')[-1].split('.')[0]
     global repo_owner
     repo_owner = repo_url.split('/')[-2]
@@ -63,9 +60,6 @@ def clone_repository(repo_url):
     # subprocess.run(["git", "remote", "set-url", "origin", remote_url])
     Repo.clone_from(remote_url, reponame)
 
-
-# def clone_repository(repo_url, destination_path):
-#     Repo.clone_from(repo_url, destination_path)
 
 # Function to read the existing SCM version from delegate-service-config.yml
 def read_scm_version(directory):
@@ -80,80 +74,6 @@ def read_scm_version(directory):
     return None
 
 
-# Function to search and replace keyword in all files
-# def search_and_replace(directory, keyword, new_value, exclude_folders=None):
-#     if exclude_folders is None:
-#         exclude_folders = ['.git','.github', '.idea', '.harness', '.aeriform']
-#
-#     for subdir, _, files in os.walk(directory):
-#         # Skip excluded folders
-#         if any(exclude_folder in subdir for exclude_folder in exclude_folders):
-#             continue
-#
-#         for file in files:
-#             file_path = os.path.join(subdir, file)
-#
-#             # Skip excluded files
-#             if any(exclude_folder in file_path for exclude_folder in exclude_folders):
-#                 continue
-#
-#             try:
-#                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-#                     content = f.read()
-#             except UnicodeDecodeError:
-#                 # Handle non-UTF-8 encoded characters if necessary
-#                 print(f"UnicodeDecodeError: Skipping file {file_path} due to non-UTF-8 encoded characters.")
-#                 continue
-#
-#             content = content.replace(keyword, new_value)
-#
-#             try:
-#                 with open(file_path, 'w', encoding='utf-8') as f:
-#                     f.write(content)
-#             except UnicodeEncodeError:
-#                 # Handle non-UTF-8 encoded characters if necessary
-#                 print(f"UnicodeEncodeError: Unable to write changes to file {file_path}.")
-#
-
-
-# Function to update SCM version in delegate-service-config.yml and all files
-# def update_scm_version(repo_path, new_scm_version):
-#     # exclude these dir and files
-#     exclude_folders = ['.git', '.github', '.idea', '.harness', '.aeriform']
-#     # Read existing SCM version
-#     global existing_scm_commitid
-#     existing_scm_commitid = read_scm_version(repo_path)
-#
-#     if existing_scm_commitid:
-#         # Search and replace SCM version in all files
-#         # search_and_replace(repo_path, existing_scm_version, new_scm_version)
-#
-#         # Update SCM version in all files
-#         for subdir, _, files in os.walk(repo_path):
-#             for file in files:
-#                 file_path = os.path.join(subdir, file)
-#
-#                 # Skip excluded files
-#                 if any(exclude_folder in file_path for exclude_folder in exclude_folders):
-#                     continue
-#
-#                 try:
-#                     with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-#                         content = f.read()
-#                 except UnicodeDecodeError:
-#                     # Handle non-UTF-8 encoded characters if necessary
-#                     print(f"UnicodeDecodeError: Skipping file {file_path} due to non-UTF-8 encoded characters.")
-#                     continue
-#
-#                 content = content.replace(f"{existing_scm_commitid}", f"{new_scm_commitid}")
-#
-#                 try:
-#                     with open(file_path, 'w', encoding='utf-8') as f:
-#                         f.write(content)
-#                 except UnicodeEncodeError:
-#                     # Handle non-UTF-8 encoded characters if necessary
-#                     print(f"UnicodeEncodeError: Unable to write changes to file {file_path}.")
-#
 
 def update_scm_version(repo_path, new_scm_version):
     # exclude these dir and files
@@ -231,9 +151,7 @@ def send_slack_notification(webhook_url, message):
         "text": f"*Security Automation: {message}  -  :white_check_mark:",
         "icon_emoji": ":harnesshd:"
     }
-    # payload = {
-    #     "text": message
-    # }
+    
     response = requests.post(webhook_url, json=payload)
     if response.status_code == 200:
         print(f"Notification sent successfully::{response}")
