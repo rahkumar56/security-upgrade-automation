@@ -264,15 +264,6 @@ if __name__ == "__main__":
     pat_token = os.getenv("pat_token")
     print(f"pat_token::{pat_token}")
 
-   
-
-# destination_path = "/Users/rahulkumar/PycharmProjects/SecurityUpgrades/repo_clone1"
-# branch_name = "update_SCMVersion_branch"
-# base_branch = "main"
-
-# pr_title = "Update SCM Version in all files"
-# pr_body = "This pull request updates the UpdateSCMVersion in all files."
-# new_scm_version = "a07a4795"
 
 # Clone the repository
 clone_repository(repo_url)
@@ -286,6 +277,5 @@ update_scm_version(repo_folder, new_scm_commitid)
 # Create a pull request
 msg = create_pull_request(repo_folder, feature_branch, base_branch, pr_title, pr_body)
 print(f"slack msg:: {msg}")
-print(f"Pull request created: {msg.html_url}")
 # Send slack notification
 send_slack_notification(slack_webhook, msg)
